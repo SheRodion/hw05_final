@@ -1,0 +1,40 @@
+<div class="card mb-3 mt-1 shadow">
+    <a href="{% url 'posts:post_detail' post.pk %}">
+    {% load thumbnail %}
+    {% thumbnail post.image "1200" crop="center" upscale=True as im %}
+    <img class="card-img" src="{{ im.url }}" />
+    {% endthumbnail %}
+    </a>
+    <div class="card-body">
+      <p class="card-text">
+        <a name="post_{{ post.id }}" href="{% url 'posts:profile' post.author %}">
+          <strong class="d-block text-gray-dark">{{ post.author }}</strong>
+        </a>
+        {{ post.text|linebreaksbr|urlizetrunc:40 }}
+      </p>
+      
+      {% if post.group %}
+      <p>
+        <a class="card-link muted" href="{% url 'posts:group_list' slug=post.group.slug %}">
+          <strong class="d-block text-gray-dark">{{ post.group.title }}</strong>
+        </a>
+      </p>
+      {% endif %}
+  
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          {% if not form %}
+          <a class="btn btn-outline-primary btn-sm" href="{% url 'posts:post_detail' post.pk %}">Подробнее</a>
+          {% endif %}
+          {% if user == post.author and form %}
+              <a class="btn btn-outline-primary btn-sm" href="{% url 'posts:post_edit' post.id %}" role="button">
+                Редактировать
+              </a>
+          {% endif %}
+        </div>
+        <div class="text-muted">
+          <small>{{ post.pub_date }}</small>
+        </div>
+      </div>
+    </div>
+  </div>    
